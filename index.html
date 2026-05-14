@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Bree</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&family=Permanent+Marker&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #b1a7f3;
+            --secondary: #e9e6ff;
+            --accent: #9381ff;
+            --bg: #fcfbff;
+            --text: #5e548e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(var(--primary) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        #entrance {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg);
+            z-index: 200;
+            transition: opacity 1s ease;
+        }
+
+        .open-btn {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 1.2rem 2.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(177, 167, 243, 0.3);
+        }
+
+        .open-btn:hover { 
+            background: var(--primary); 
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        #main-content {
+            opacity: 0;
+            transition: opacity 1.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5vh 20px;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        h1 { 
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem; 
+            color: var(--text);
+            text-shadow: 2px 2px white;
+        }
+
+        .photo-grid {
+            position: relative;
+            width: 100%;
+            max-width: 950px;
+            height: 75vh;
+            margin: 0 auto;
+        }
+
+        .polaroid {
+            position: absolute;
+            background: #ffffff;
+            padding: 12px 12px 40px 12px;
+            width: 250px;
+            box-shadow: 0 15px 35px rgba(94, 84, 142, 0.1);
+            transition: transform 0.4s ease;
+            cursor: pointer;
+            border-radius: 2px;
+            /* Applies the tilt variable globally */
+            transform: rotate(var(--rot));
+            animation: floaty 6s ease-in-out infinite;
+        }
+
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0) rotate(var(--rot)); }
+            50% { transform: translateY(-15px) rotate(var(--rot)); }
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #fdfdfd;
+        }
+
+        .polaroid::after {
+            content: attr(data-caption);
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #7a71ad;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.1rem;
+        }
+
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 100 !important;
+            animation: none;
+            box-shadow: 0 20px 40px rgba(94, 84, 142, 0.2);
+        }
+
+        .birthday-message {
+            max-width: 650px;
+            text-align: center;
+            margin: 40px 0 80px 0;
+            padding: 50px;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(177, 167, 243, 0.15);
+            border: 2px solid var(--secondary);
+        }
+
+        .birthday-message h2 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--text);
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+        }
+
+        .birthday-message p {
+            line-height: 2;
+            font-size: 1.1rem;
+            color: #6a609e;
+            margin-bottom: 25px;
+        }
+
+        .signature {
+            font-family: 'Permanent Marker', cursive;
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 769px) {
+            .polaroid:nth-child(1) { top: 5%; left: 3%; }
+            .polaroid:nth-child(2) { top: 0%; left: 36%; }
+            .polaroid:nth-child(3) { top: 10%; left: 69%; }
+            .polaroid:nth-child(4) { top: 48%; left: 18%; }
+            .polaroid:nth-child(5) { top: 52%; left: 54%; }
+        }
+
+        @media (max-width: 768px) {
+            .photo-grid {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+                gap: 50px; /* Increased gap for tilted photos */
+                padding: 20px 0;
+                margin-bottom: 40px;
+            }
+            .polaroid { 
+                position: relative; 
+                top: auto !important; 
+                left: auto !important;
+                /* Animation kept on for mobile for that "magic" feel */
+                animation: floaty 6s ease-in-out infinite;
+            }
+            h1 { font-size: 2.8rem; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="entrance">
+        <button class="open-btn" onclick="initReveal()">Open with Love 💜</button>
+    </div>
+
+    <div id="main-content">
+        <div class="header">
+            <p style="color: var(--primary); font-weight: 700; letter-spacing: 2px; margin-bottom: 10px;">FOR OUR BREE BREE</p>
+            <h1>Happy Birthday!</h1>
+        </div>
+
+        <div class="photo-grid">
+            <div class="polaroid" data-caption="Cousins 🎀"><img src="PHOTO4.jpg" alt="1"></div>
+            <div class="polaroid" data-caption="Moments ✨"><img src="PHOTO2.jpg" alt="2"></div>
+            <div class="polaroid" data-caption="Memories 💜"><img src="PHOTO1.jpg" alt="3"></div>
+            <div class="polaroid" data-caption="Stay Cool 😎"><img src="PHOTO5.jpg" alt="4"></div>
+            <div class="polaroid" data-caption="Best Day 🎂"><img src="PHOTO3.jpg" alt="5"></div>
+        </div>
+
+        <div class="birthday-message">
+            <h2>Dearest Bree,</h2>
+            <p>
+                Happy, happy birthday to our one and only Bree Bree! We are so incredibly proud of the person you are becoming. 
+                As you celebrate your special day, our prayer is for you to keep shining bright, continue to excel in your studies, 
+                stay grounded in your faith, and always keep God at the center of everything you do.
+            </p>
+            <p>
+                Never forget how much you are cherished. Keep holding your family close to your heart; always honor and love 
+                your Mama and Papa, and continue to be a wonderful sister to Kuya Chookie and Twinkle. You are such a blessing 
+                to all of us, and we can’t wait to see all the amazing things God has in store for your life.
+            </p>
+            <div class="signature">With all the love,<br>Manong Sweet</div>
+        </div>
+    </div>
+
+    <script>
+        // Apply random tilts to all polaroids immediately
+        document.querySelectorAll('.polaroid').forEach(photo => {
+            const randomRotation = Math.floor(Math.random() * 14) - 7; // -7 to +7 degrees
+            photo.style.setProperty('--rot', `${randomRotation}deg`);
+        });
+
+        function initReveal() {
+            document.getElementById('entrance').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('entrance').classList.add('hidden');
+                document.getElementById('main-content').style.opacity = '1';
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#b1a7f3', '#9381ff', '#ffffff']
+                });
+            }, 800);
+        }
+    </script>
+</body>
+</html>
